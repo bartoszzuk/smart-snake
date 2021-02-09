@@ -25,7 +25,6 @@ class Square:
         pygame.draw.rect(screen, color, (self.position, self.size))
 
 
-# TODO Fix food generation
 def random_food(screen: Surface, step: int, offset: int):
     size = screen.get_size()
     x = compute_coordinate(random.randint(0, size[0]), step, offset)
