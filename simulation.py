@@ -4,6 +4,13 @@ from models import Direction
 import models
 from utils import compute_coordinate
 
+keys_to_direction = {
+    pygame.K_UP: Direction.UP,
+    pygame.K_DOWN: Direction.DOWN,
+    pygame.K_LEFT: Direction.LEFT,
+    pygame.K_RIGHT: Direction.RIGHT
+}
+
 
 def start_position(screen: Surface, step: int, offset: int) -> Vector2:
     size = screen.get_size()
@@ -12,23 +19,12 @@ def start_position(screen: Surface, step: int, offset: int) -> Vector2:
     return Vector2(x, y)
 
 
-def stop():
-    return any(event.type == pygame.QUIT for event in pygame.event.get())
-
-
 def handle_events(snake):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             raise SystemExit
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                snake.move(Direction.UP)
-            elif event.key == pygame.K_DOWN:
-                snake.move(Direction.DOWN)
-            elif event.key == pygame.K_LEFT:
-                snake.move(Direction.LEFT)
-            elif event.key == pygame.K_RIGHT:
-                snake.move(Direction.RIGHT)
+            snake.move(keys_to_direction[event.key])
 
 
 def run(screen, clock):
