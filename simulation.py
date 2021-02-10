@@ -1,7 +1,7 @@
 import pygame
-from pygame import Vector2, Surface
-from models import Direction, Snake, Square, random_food
-from utils import compute_coordinate
+
+from game import Board, random_food
+from model import Direction, Snake, Square
 
 keys_to_direction = {
     pygame.K_UP: Direction.UP,
@@ -9,13 +9,6 @@ keys_to_direction = {
     pygame.K_LEFT: Direction.LEFT,
     pygame.K_RIGHT: Direction.RIGHT
 }
-
-
-def start_position(screen: Surface, step: int, offset: int) -> Vector2:
-    size = screen.get_size()
-    x = compute_coordinate(size[0] // 2, step, offset)
-    y = compute_coordinate(size[1] // 2, step, offset)
-    return Vector2(x, y)
 
 
 def handle_events(snake):
@@ -31,18 +24,17 @@ def food_consumed(snake: Snake, food: Square) -> bool:
 
 
 # TODO clean this function
-def run(screen, clock):
-    start = start_position(screen, 20, 2)
-    snake = Snake(start)
-    food = random_food(screen, snake, 20, 2)
+def run(board: Board, clock):
+    snake = Snake(board.start, length=2)
+    food = random_food(board)
     while True:
-        screen.fill('black')
+        board.fill('black')
         handle_events(snake)
         if food_consumed(snake, food):
+            food = random_food(board)
             snake.grow()
-            food = random_food(screen, snake, 20, 2)
-        snake.draw(screen, color='white')
-        food.draw(screen, color='red')
+        board.draw(snake, color='white')
+        board.draw(food, color='red')
         pygame.display.update()
         clock.tick(60)
 
