@@ -1,8 +1,9 @@
-from typing import Tuple, Union
-from model import Snake, Square
 import random
+from typing import Tuple, Union, List
+
 import pygame
 
+from model import Snake, Square
 
 IntTuple = Tuple[int, int]
 Model = Union[Snake, Square]
@@ -27,6 +28,11 @@ class Board:
     def start(self):
         return self.rows // 2, self.columns // 2
 
+    @property
+    def squares(self):
+        rows, columns = range(0, self.rows), range(0, self.columns)
+        return [Square(row, column) for row, column in zip(rows, columns)]
+
     def fill(self, color='black'):
         self.screen.fill(color)
 
@@ -49,7 +55,12 @@ def _compute_size(rows: int, columns: int, step: int, offset: int) -> IntTuple:
     return x, y
 
 
-# TODO fix this function and prevent overlapping with snake
-def random_food(board: Board):
-    position = random.randint(0, board.rows), random.randint(0, board.columns)
-    return Square(*position)
+def random_food(board: Board, exclude: List[Square] = None):
+    squares = _filtered_squares(board.squares, exclude) if exclude else board.squares
+    return random.choice(squares)
+
+
+def _filtered_squares(positions: List[Square], exclude: List[Square]) -> List[Square]:
+    positions = set(square.position for square in positions)
+    excluded = set(square.position for square in exclude)
+    return [Square(*position) for position in positions.difference(excluded)]

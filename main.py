@@ -11,9 +11,9 @@ config.read('configuration.ini')
 
 
 def initialize():
-    size = config['main'].gettuple('window-size')
-    step = config['main'].getint('step')
-    offset = config['main'].getint('offset')
+    size = config['Board'].gettuple('board-size')
+    step = config['Board'].getint('step')
+    offset = config['Board'].getint('offset')
 
     pygame.init()
     pygame.display.set_caption('Smart Snake')

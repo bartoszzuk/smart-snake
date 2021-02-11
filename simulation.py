@@ -23,17 +23,25 @@ def food_consumed(snake: Snake, food: Square) -> bool:
     return snake.head.position == food.position
 
 
+def overlaps(snake: Snake):
+    unique = set(square.position for square in snake.squares)
+    return len(unique) != len(snake.squares)
+
+
 # TODO clean this function
 def run(board: Board, clock):
     snake = Snake(board.start, length=2)
-    food = random_food(board)
+    food = random_food(board, exclude=snake.squares)
     while True:
         board.fill('black')
         handle_events(snake)
         if food_consumed(snake, food):
-            food = random_food(board)
+            food = random_food(board, exclude=snake.squares)
             snake.grow()
-        board.draw(snake, color='white')
+        if overlaps(snake):
+            board.draw(snake, color='green')
+        else:
+            board.draw(snake, color='white')
         board.draw(food, color='red')
         pygame.display.update()
         clock.tick(60)
